@@ -9,9 +9,18 @@ using namespace std;
 
 
 // Constructor for 'othello' class
-othello::othello(int b[8][8], int t, int m) {
-	
-	board = b;
+othello::othello(int (&b)[8][8], int t, int m) {
+	for (int i=0; i<10; i++) {
+		board[0][i] = 3;
+		board[9][i] = 3;
+		board[i][0] = 3;
+		board[i][9] = 3;
+	}
+	for (int i=1; i<9; i++) {
+		for (int j=1; j<9; j++) {
+			board[i][j] = b[i-1][j-1];
+		}
+	}
 	turn = t;
 	moves = m;
 		
@@ -33,18 +42,17 @@ othello::othello(int b[8][8], int t, int m) {
 		columnLabels += string(1,i); // conversion not necessary
 		columnLabels += "\u0020\033[31;42m\u2502\033[m";
 	}
-	
 }
 
 
 // Print the board
-int othello::print(int b[8][8]) {	
+int othello::print() {	
 	cout << columnLabels << endl;
 	cout << rowDivider << endl;
-	for (int i=0; i<8; i++) {
-		cout << "\033[97;42m " << (i+1) << " \033[31;42m\u2502\033[m";
-		for (int j=0; j<8; j++) {
-			cout << spaces[b[i][j]];
+	for (int i=1; i<9; i++) {
+		cout << "\033[97;42m " << (i) << " \033[31;42m\u2502\033[m";
+		for (int j=1; j<9; j++) {
+			cout << spaces[board[i][j]];
 		}
 		cout << endl << rowDivider << endl;
 	}
@@ -53,22 +61,10 @@ int othello::print(int b[8][8]) {
 }
 
 
-// Test board data member
-void othello::getBoard() {
-	for (int i=0; i<8; i++) {
-		for (int j=0; j<8; j++) {
-			cout << board[i][j] << endl;;
-		}
-		cout << endl;
-	}
-	cout << "********" << moves << endl;
-}
-
-
 int main() {
 	
 	// Test board to print
-	int board[8][8] = {
+	int board_0[8][8] = {
 		{0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,0},
@@ -79,11 +75,9 @@ int main() {
 		{0,0,0,0,0,0,0,0}
 	};
 
-	othello game = othello(board, 5, 5);
+	othello game = othello(board_0, 5, 5);
 	
-	game.getBoard();
-	
-	game.print(board);
+	game.print();
 	
 	return 1;
 }
