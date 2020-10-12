@@ -21,13 +21,16 @@ private:
 public:
 
     // Constructor for 'othello' class
-    othello(int board[8][8] = { 0 }, int turn = 1, int moves = 0);
+    //othello(int board[8][8] = { 0 }, int turn = 1, int moves = 0);
+	othello(int b[8][8], int t, int m);
 
 
 	// Formats and prints board to standard output
-	int print(int [8][8]);
+	int print(int b[8][8]);
 
 
+	// Testing
+	void getBoard();
 	
 
 };
