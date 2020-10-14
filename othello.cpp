@@ -1,8 +1,7 @@
-
 #include "othello.h"
-#include <iostream>
 #include <windows.h>
 #include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -175,51 +174,5 @@ int othello::doMove(int num) {
 	return 1;
 }
 
-
-
-
-
-int main() {
-	
-	// Test board to print
-	int corner_test[8][8] = {
-		{0,0,0,0,2,1,2,0},
-		{0,0,0,0,0,2,1,2},
-		{0,0,0,0,0,0,2,1},
-		{0,0,0,0,0,0,0,2},
-		{0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0}
-	};
-    
-    int long_move[8][8] = {
-		{0,0,0,2,2,1,2,0},
-		{0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,0,0},
-		{0,1,2,1,1,1,0,0},
-		{0,0,0,0,0,0,0,0},
-		{0,1,2,1,1,1,0,0}
-	};
-
-	othello game = othello(long_move, 1);
-	
-	int move;
-    string player;
-    int state = 1;
-	while(state == 1) {
-		game.print();
-		cout << (game.turn==1 ? "Black's turn" : "White's turn") << endl;
-        cout << "Select a move: " << endl;
-		cin >> move;
-		state = game.doMove(move);
-	}
-    
-    game.print();
-	
-	return 1;
-}
 
 
