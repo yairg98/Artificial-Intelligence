@@ -86,7 +86,7 @@ int othello::checkDirection(int i, int j, int di, int dj) {
 			return 1;
 		}
 		
-		else if ( (board[i+di][i+dj] == 0) || (board[i+di][j+dj] == 3) ) {
+		else if ( (board[i+di][j+dj] == 0) || (board[i+di][j+dj] == 3) ) {
 			return 0;
 		}
 		
