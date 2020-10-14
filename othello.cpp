@@ -150,7 +150,6 @@ int othello::findMoves() {
 			nextSpace:;
 		}
 	}
-	cout << "Number of moves: " << num << endl;
 	return num;
 }
 
@@ -167,7 +166,7 @@ int othello::doMove(int num) {
     turn = 3 - turn;
     if (findMoves() == 0) {
         turn = 3 - turn;
-        cout << "No moves available. Skipping turn." << endl;
+        cout << "Skipped a turn because no moves were available." << endl;
         if (findMoves() == 0) {
             cout << "No remaining moves. Goodbye." << endl;
             return 2;
@@ -195,7 +194,7 @@ int main() {
 	};
     
     int long_move[8][8] = {
-		{0,0,2,2,2,1,2,0},
+		{0,0,0,2,2,1,2,0},
 		{0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,0},
