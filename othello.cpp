@@ -167,7 +167,9 @@ int othello::doMove(int num) {
     turn = 3 - turn;
     if (findMoves() == 0) {
         turn = 3 - turn;
+        cout << "No moves available. Skipping turn." << endl;
         if (findMoves() == 0) {
+            cout << "No remaining moves. Goodbye." << endl;
             return 2;
         }
     }
