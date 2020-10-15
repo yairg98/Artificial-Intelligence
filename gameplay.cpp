@@ -9,7 +9,18 @@ using namespace std;
 int main() {
 	
 	// Test board to print
-	int corner_test[8][8] = {
+	int def_board[8][8] = {
+		{0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0},
+		{0,0,0,1,2,0,0,0},
+		{0,0,0,2,1,0,0,0},
+		{0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,0,0}
+	};
+    
+    int corner_test[8][8] = {
 		{0,0,0,0,2,1,2,0},
 		{0,0,0,0,0,2,1,2},
 		{0,0,0,0,0,0,2,1},
@@ -20,7 +31,7 @@ int main() {
 		{0,0,0,0,0,0,0,0}
 	};
 
-	othello game(corner_test, 1);
+	othello game(def_board, 1);
 	
 	int move;
     int state = 1;
