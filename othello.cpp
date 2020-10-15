@@ -161,18 +161,62 @@ int othello::doMove(int num) {
 			}
 		}
 	}
-    // Toggle turn and check if game is over
-    turn = 3 - turn;
-    if (findMoves() == 0) {
-        turn = 3 - turn;
-        cout << "Skipped a turn because no moves were available." << endl;
-        if (findMoves() == 0) {
-            cout << "No remaining moves. Goodbye." << endl;
-            return 2;
-        }
-    }
-	return 1;
+    return 1;
 }
 
+
+int othello::getState(int firstMove) {
+    cout << endl;
+    // Unless it's the first move, toggle turn
+    if (!firstMove) {
+        turn = 3 - turn;
+    }
+    // Check for available moves, and toggle turn as necessary
+    if (findMoves() == 0) {
+        turn = 3 - turn;
+        // If no moves are available for either player (game is over)
+        if (findMoves() == 0) {
+            cout << "No moves remaining. Game has ended." << endl;
+            return 2;
+        }
+        // If a turn was skipped but the game is not over
+        else {
+            cout << "Skipped a turn because no moves were available." << endl;
+            return 1;
+        }
+    }
+	// If moves are available and turn changes normally
+    return 0;
+}
+
+
+int othello::score() {
+    int black = 0;
+    int white = 0;
+    
+    // Count up the pieces
+    for (int i=1; i<9; i++) {
+        for (int j=1; j<9; j++) {
+            if (board[i][j] == 1) { black++; }
+            else if (board[i][j] == 2) { white++; }
+        }
+    }
+    
+    // Identify the winner
+    int winner;
+    if (black > white) { winner = 1; }
+    else if (white > black) { winner = 2; }
+    else { winner = 0; }
+    
+    // Print message
+    cout << "Final Score:" << endl;
+    cout << "  Black: " << black << endl;
+    cout << "  White: " << white << endl;
+    cout << endl;
+    if (winner == 0) { cout << "Match is a draw!" << endl; }
+    else { cout << "Winner is PLAYER " << winner << "!" << endl; }
+    
+    return winner;
+}
 
 

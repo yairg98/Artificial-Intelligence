@@ -31,11 +31,6 @@ public:
 	int print();
 	
 	
-	// Update the legal moves array
-	// Returns the number of identified legal moves
-	int findMoves();
-	
-	
 	// Recursively checks for a sequence-ending piece
 	// Return true if sequence implies a legal move, otherwise false
 	int checkDirection(int i, int j, int di, int dj);
@@ -44,11 +39,24 @@ public:
 	// Place a tile at given space (i,j) and perform all necessary flips
 	// Return 1 on success
 	int flipTiles(int i, int j);
+    
+	
+	// Update the legal moves array
+	// Returns the number of identified legal moves
+	int findMoves();
 	
 	
 	// Execute the selected move
 	// Return 1 if successful, otherwise return 0
 	int doMove(int num);
+    
+    // Check the state of the board and set turn accordingly
+    // Return 0 for regular turn; 1 for skipped turn; 2 for game over
+    int getState(int firstMove = 0);
+    
+    // Calculate and print the final score
+    // Return the winning player, or 0 for a draw
+    int score();
 	
 	
 };
