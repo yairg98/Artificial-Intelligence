@@ -82,7 +82,6 @@ int main() {
     
     game.print();
     game.score();
-	cout << "PENIS";
     
 	return 1;
 }
