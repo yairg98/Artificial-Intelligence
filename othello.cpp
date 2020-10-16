@@ -158,10 +158,11 @@ int othello::doMove(int num) {
 		for (int j=1; j<9; j++) {
 			if (legalMoves[i][j] == num) {
 				flipTiles(i, j);
+                return 1;
 			}
 		}
 	}
-    return 1;
+    return 0;
 }
 
 

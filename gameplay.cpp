@@ -70,13 +70,17 @@ int main() {
     
     // Continue making moves until the game ends
     int move;
+    int legal;
 	while(state != 2) {
 		game.print();
-		cout << "PLAYER " << game.turn << endl;
+		legal = 0;
+        cout << "PLAYER " << game.turn << endl;
         cout << "Select a move: " << endl;
-        cout << "-> ";
-		cin >> move;
-		game.doMove(move);
+        while (legal == 0) {
+            cout << "-> ";
+            cin >> move;
+            legal = game.doMove(move);
+        }
         state = game.getState();
 	}
     
