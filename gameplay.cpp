@@ -65,13 +65,12 @@ othello loadBoard() {
 int main() {
 	
     othello game = loadBoard();
-	int state = 0;
-    state = game.getState(1);
+	int state = game.getState(1);
     
     // Continue making moves until the game ends
     int move;
     int legal;
-	while(state != 2) {
+	while(state != 0) {
 		game.print();
 		legal = 0;
         cout << "PLAYER " << game.turn << endl;

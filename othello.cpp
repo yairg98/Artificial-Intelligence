@@ -178,16 +178,16 @@ int othello::getState(int firstMove) {
         // If no moves are available for either player (game is over)
         if (findMoves() == 0) {
             cout << "No moves remaining. Game has ended." << endl;
-            return 2;
+            return 0;
         }
         // If a turn was skipped but the game is not over
         else {
             cout << "Skipped a turn because no moves were available." << endl;
-            return 1;
+            return turn;
         }
     }
 	// If moves are available and turn changes normally
-    return 0;
+    return turn;
 }
 
 
