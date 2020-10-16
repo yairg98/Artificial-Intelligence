@@ -1,7 +1,7 @@
-
 #include <string>
 #include <iostream>
 #include <limits>
+#include <time.h>
 #include "Othello.h"
 
 using namespace std;
@@ -11,11 +11,11 @@ using namespace std;
 class Player {
 
 public:
-
+    
 	// Selects and returns a move 
 	virtual int getMove(Othello &game) {
-		return 0;
-	}
+        return 0;
+    }
 	
 };
 
@@ -55,6 +55,7 @@ class Random: public Player {
 public:
 
 	int getMove(Othello &game) {
+        srand(time(NULL));
 		return ( 1 + rand() % game.n_moves );
 	}
 

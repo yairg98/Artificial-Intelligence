@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include "Player.h"
 
 using namespace std;
@@ -73,8 +74,19 @@ Player getPlayer(int p) {
 	cout << "2. Random-selector bot" << endl;
 	cin >> type;
 	if ( !cin.good() ) { goto top; }
+    
 	else if (type == 1) { return Human(); }
 	else if (type == 2) { return Random(); }
+    
+	// else if (type == 1) {
+        // static Human player = Human();
+        // Human* pplayer = &player;
+    // }
+    // else if (type == 2) {
+        // static Random player = Random();
+        // Random* pplayer = &player;
+    // }
+    
 	else {goto top; }
 }
 
@@ -85,9 +97,9 @@ int main() {
 	
 	// Select players (human, AI, random, etc.)
 	// players[0] is left empty to keep the index consistent with the player id
-	Player players[3];
-	players[1] = getPlayer(1);
-	players[2] = getPlayer(2);
+	vector<Player*> players(3);
+	*players[1] = getPlayer(1);
+	*players[2] = getPlayer(2);
 	
 	// Load and start the game
     Othello game = loadBoard();
@@ -101,7 +113,7 @@ int main() {
 		legal = 0;
         cout << "PLAYER " << game.turn << endl;
         while (legal == 0) {
-			move = players[state].getMove(game);
+			move = players[state]->getMove(game);
             legal = game.doMove(move);
         }
         state = game.getState();
