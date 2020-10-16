@@ -1,11 +1,13 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include "othello.h"
+#include "Player.h"
 
 using namespace std;
 
-othello loadBoard() {
+
+// Loads and returns the gameboard (based on user selection)
+Othello loadBoard() {
     top:;
     string input;
     // Optionally load  board position from a text file
@@ -27,7 +29,7 @@ othello loadBoard() {
             {0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0}
         };
-        return othello(board_0, 1);
+        return Othello(board_0, 1);
     }
     
     else if (input == "2") {
@@ -51,7 +53,7 @@ othello loadBoard() {
         }
         int turn;
         fp >> turn; // make sure this is 1 0r 2
-        return othello(board_0, turn);
+        return Othello(board_0, turn);
     }
     
     else {
@@ -62,10 +64,34 @@ othello loadBoard() {
 }
 
 
+// Creates and returns a player of the correct type (based on user selection)
+Player getPlayer(int p) {
+	top:;
+	int type;
+	cout << "Choose a type for PLAYER " << p << ":" << endl;
+	cout << "1. Human" << endl;
+	cout << "2. Random-selector bot" << endl;
+	cin >> type;
+	if ( !cin.good() ) { goto top; }
+	else if (type == 1) { return Human(); }
+	else if (type == 2) { return Random(); }
+	else {goto top; }
+}
+
+
+
+// Runs the game
 int main() {
 	
-    othello game = loadBoard();
-	int state = game.getState(1);
+	// Select players (human, AI, random, etc.)
+	// players[0] is left empty to keep the index consistent with the player id
+	Player players[3];
+	players[1] = getPlayer(1);
+	players[2] = getPlayer(2);
+	
+	// Load and start the game
+    Othello game = loadBoard();
+	int state = game.getState(1); // 1 or 2 for turn, or 0 for game over
     
     // Continue making moves until the game ends
     int move;
@@ -74,10 +100,8 @@ int main() {
 		game.print();
 		legal = 0;
         cout << "PLAYER " << game.turn << endl;
-        cout << "Select a move: " << endl;
         while (legal == 0) {
-            cout << "-> ";
-            cin >> move;
+			move = players[state].getMove(game);
             legal = game.doMove(move);
         }
         state = game.getState();

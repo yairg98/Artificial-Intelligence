@@ -1,4 +1,4 @@
-#include "othello.h"
+#include "Othello.h"
 #include <windows.h>
 #include <string>
 #include <iostream>
@@ -6,7 +6,7 @@
 using namespace std;
 
 
-othello::othello(int (&b)[8][8], int t) {
+Othello::Othello(int (&b)[8][8], int t) {
 	for (int i=0; i<10; i++) {
 		board[0][i] = 3;
 		board[9][i] = 3;
@@ -42,7 +42,7 @@ othello::othello(int (&b)[8][8], int t) {
 }
 
 
-int othello::print() {
+int Othello::print() {
 
 	string num;
 	cout << columnLabels << endl;
@@ -75,7 +75,7 @@ int othello::print() {
 }
 
 
-int othello::checkDirection(int i, int j, int di, int dj) {
+int Othello::checkDirection(int i, int j, int di, int dj) {
 	
     if (board[i+di][j+dj] != (3-turn)) { return 0; }
     else {i += di, j +=dj; }
@@ -97,7 +97,7 @@ int othello::checkDirection(int i, int j, int di, int dj) {
 }
 
 
-int othello::flipTiles(int i0, int j0) {
+int Othello::flipTiles(int i0, int j0) {
     int i, j;
     board[i0][j0] = turn;
     for (int di : {-1,0,1}) {
@@ -115,7 +115,7 @@ int othello::flipTiles(int i0, int j0) {
 }
 
 
-int othello::findMoves() {
+int Othello::findMoves() {
 	
 	int num = 0;
 	
@@ -149,11 +149,13 @@ int othello::findMoves() {
 			nextSpace:;
 		}
 	}
+	n_moves = num;
 	return num;
 }
 
 
-int othello::doMove(int num) {
+int Othello::doMove(int num) {
+	if (num == 0) {return 0; }
 	for (int i=1; i<9; i++) {
 		for (int j=1; j<9; j++) {
 			if (legalMoves[i][j] == num) {
@@ -166,7 +168,7 @@ int othello::doMove(int num) {
 }
 
 
-int othello::getState(int firstMove) {
+int Othello::getState(int firstMove) {
     cout << endl;
     // Unless it's the first move, toggle turn
     if (!firstMove) {
@@ -191,7 +193,7 @@ int othello::getState(int firstMove) {
 }
 
 
-int othello::score() {
+int Othello::score() {
     int black = 0;
     int white = 0;
     
