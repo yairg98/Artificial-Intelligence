@@ -4,6 +4,9 @@
 #include <time.h>
 #include "Othello.h"
 
+#include <chrono>
+#include <thread>
+
 using namespace std;
 
 
@@ -55,6 +58,9 @@ class Random: public Player {
 public:
 
 	int getMove(Othello &game) {
+        // Short pause to "think" - better playing experience
+        cout << "Thinking..." << endl;
+        this_thread::sleep_for(chrono::seconds(1));
         srand(time(NULL));
 		return ( 1 + rand() % game.n_moves );
 	}

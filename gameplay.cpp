@@ -106,7 +106,7 @@ int main() {
     int legal;
 	while(state != 0) {
 		game.print();
-		legal = 0;
+		legal = 0; // turns to 1 when legal move is executed
         cout << "PLAYER " << game.turn << endl;
         while (legal == 0) {
 			move = players[state-1]->getMove(game);
