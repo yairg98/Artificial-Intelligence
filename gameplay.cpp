@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <memory>
 #include "Player.h"
 
 using namespace std;
@@ -66,7 +67,7 @@ Othello loadBoard() {
 
 
 // Creates and returns a player of the correct type (based on user selection)
-Player getPlayer(int p) {
+int getPlayer(int p) {
 	top:;
 	int type;
 	cout << "Choose a type for PLAYER " << p << ":" << endl;
@@ -75,17 +76,8 @@ Player getPlayer(int p) {
 	cin >> type;
 	if ( !cin.good() ) { goto top; }
     
-	else if (type == 1) { return Human(); }
-	else if (type == 2) { return Random(); }
-    
-	// else if (type == 1) {
-        // static Human player = Human();
-        // Human* pplayer = &player;
-    // }
-    // else if (type == 2) {
-        // static Random player = Random();
-        // Random* pplayer = &player;
-    // }
+	else if (type == 1) { return 1; }
+	else if (type == 2) { return 2; }
     
 	else {goto top; }
 }
@@ -97,10 +89,14 @@ int main() {
 	
 	// Select players (human, AI, random, etc.)
 	// players[0] is left empty to keep the index consistent with the player id
-	vector<Player*> players(3);
-	*players[1] = getPlayer(1);
-	*players[2] = getPlayer(2);
-	
+	vector<unique_ptr<Player>> players;
+    int type;
+	for ( int i : {1, 2} ) {
+        type = getPlayer(i);
+        if (type == 1) { players.emplace_back( new Human() ); }
+        else if (type == 2) { players.emplace_back( new Random() ); }
+	}
+    
 	// Load and start the game
     Othello game = loadBoard();
 	int state = game.getState(1); // 1 or 2 for turn, or 0 for game over
@@ -113,7 +109,7 @@ int main() {
 		legal = 0;
         cout << "PLAYER " << game.turn << endl;
         while (legal == 0) {
-			move = players[state]->getMove(game);
+			move = players[state-1]->getMove(game);
             legal = game.doMove(move);
         }
         state = game.getState();
