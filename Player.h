@@ -2,7 +2,7 @@
 #include <iostream>
 #include <limits>
 #include <time.h>
-#include "Othello.h"
+#include "board.h"
 
 #include <chrono>
 #include <thread>
@@ -52,17 +52,30 @@ public:
 };
 
 
-// Basic bot - selects a move at random
+// Selects moves at random
 class Random: public Player {
 
 public:
+
+    Random() {
+        srand(time(NULL));
+    }
 
 	int getMove(Othello &game) {
         // Short pause to "think" - better playing experience
         cout << "Thinking..." << endl;
         this_thread::sleep_for(chrono::seconds(1));
-        srand(time(NULL));
 		return ( 1 + rand() % game.n_moves );
 	}
+
+};
+
+
+// Basic bot - selects a move at random
+class Bot: public Player {
+
+public:
+
+	int getMove(Othello &game);
 
 };

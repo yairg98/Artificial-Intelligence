@@ -1,17 +1,17 @@
-gameplay.exe: gameplay.o Othello.o
-	g++ -o gameplay.exe gameplay.o Othello.o
+othello.exe: othello.o board.o
+	g++ -o othello.exe othello.o board.o
 	
-gameplay.o: gameplay.cpp Player.h Othello.h
-	g++ -c gameplay.cpp
+othello.o: othello.cpp player.h board.h
+	g++ -c othello.cpp
 
-Othello.exe: Othello.o
-	g++ -o Othello.exe Othello.o
+board.exe: board.o
+	g++ -o board.exe board.o
     
-Othello.o: Othello.cpp Othello.h
-	g++ -c Othello.cpp
+board.o: board.cpp board.h
+	g++ -c board.cpp
 
 debug:
-	g++ -g -o gameplay.exe gameplay.cpp Othello.cpp
+	g++ -g -o othello.exe othello.cpp board.cpp
 
 clean:
 	rm -f *.exe *.o *.stackdump *~
