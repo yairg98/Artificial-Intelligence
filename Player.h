@@ -3,9 +3,9 @@
 #include <limits>
 #include <time.h>
 #include "board.h"
-
 #include <chrono>
 #include <thread>
+#include <utility>
 
 using namespace std;
 
@@ -16,7 +16,7 @@ class Player {
 public:
     
 	// Selects and returns a move 
-	virtual int getMove(Othello &game) {
+	virtual int getMove(othello &game) {
         return 0;
     }
 	
@@ -29,7 +29,7 @@ class Human: public Player {
 public:
 
 	// Allow user to select a move
-	int getMove(Othello &game) {
+	int getMove(othello &game) {
 		int move = 0;
 		bool valid= false;
 		
@@ -61,10 +61,10 @@ public:
         srand(time(NULL));
     }
 
-	int getMove(Othello &game) {
+	int getMove(othello &game) {
         // Short pause to "think" - better playing experience
         cout << "Thinking..." << endl;
-        this_thread::sleep_for(chrono::seconds(1));
+        // this_thread::sleep_for(chrono::seconds(1));
 		return ( 1 + rand() % game.n_moves );
 	}
 
@@ -76,6 +76,19 @@ class Bot: public Player {
 
 public:
 
-	int getMove(Othello &game);
+	// Prompt the player to make a move
+	int getMove(othello &game);
+	
+	// Heuristic function
+	int utility(othello &game);
+	
+	// Search a specific depth
+	int searchDepth(othello &game, int depth);
+	
+	// Return the highest-value child move, with its value
+	pair<int, int> maxVal(othello &game, int remaining);
 
+	// Return the lowest-value child move, with its value
+	pair<int, int> minVal(othello &game, int remaining);
+	
 };

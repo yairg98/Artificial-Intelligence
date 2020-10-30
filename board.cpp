@@ -6,7 +6,7 @@
 using namespace std;
 
 
-Othello::Othello(int (&b)[8][8], int t) {
+othello::othello(int (&b)[8][8], int t) {
 	for (int i=0; i<10; i++) {
 		board[0][i] = 3;
 		board[9][i] = 3;
@@ -38,11 +38,11 @@ Othello::Othello(int (&b)[8][8], int t) {
 	}
 	
 	// Set initial legal moves
-	findMoves();
+	update();
 }
 
 
-int Othello::print() {
+int othello::print() {
 
 	string num;
 	cout << columnLabels << endl;
@@ -75,7 +75,7 @@ int Othello::print() {
 }
 
 
-int Othello::checkDirection(int i, int j, int di, int dj) {
+int othello::checkDirection(int i, int j, int di, int dj) {
 	
     if (board[i+di][j+dj] != (3-turn)) { return 0; }
     else {i += di, j +=dj; }
@@ -88,7 +88,7 @@ int Othello::checkDirection(int i, int j, int di, int dj) {
 }
 
 
-int Othello::flipTiles(int i0, int j0) {
+int othello::flipTiles(int i0, int j0) {
     int i, j;
     board[i0][j0] = turn;
     for (int di : {-1,0,1}) {
@@ -106,14 +106,18 @@ int Othello::flipTiles(int i0, int j0) {
 }
 
 
-int Othello::findMoves() {
+int othello::update() {
 	
-	int num = 0;
+	n_moves = 0;
+	n_black = 0;
+	n_white = 0;
 	
-    // Reset legalMoves
-    for (int i=1; i<9; i++) {
+    // Reset legalMoves and count black and white pieces
+	for (int i=1; i<9; i++) {
 		for (int j=1; j<9; j++) {
 			legalMoves[i][j] = 0;
+			if (board[i][j]==1) { n_black++; }
+			else if (board[i][j]==2) { n_white++; }
         }
     }
     
@@ -132,7 +136,7 @@ int Othello::findMoves() {
 					
                     // Check if tiles can be flipped in that direction
                     if ( checkDirection(i, j, di, dj) == 1 ) {
-                        legalMoves[i][j] = ++num;
+                        legalMoves[i][j] = ++n_moves;
                         goto nextSpace;
                     }
 				}
@@ -140,12 +144,11 @@ int Othello::findMoves() {
 			nextSpace:;
 		}
 	}
-	n_moves = num;
-	return num;
+	return n_moves;
 }
 
 
-int Othello::doMove(int num) {
+int othello::doMove(int num) {
 	if (num == 0) {return 0; }
 	for (int i=1; i<9; i++) {
 		for (int j=1; j<9; j++) {
@@ -159,23 +162,21 @@ int Othello::doMove(int num) {
 }
 
 
-int Othello::getState(int firstMove) {
+int othello::getState(int firstMove) {
     cout << endl;
     // Unless it's the first move, toggle turn
     if (!firstMove) {
         turn = 3 - turn;
     }
     // Check for available moves, and toggle turn as necessary
-    if (findMoves() == 0) {
+    if (update() == 0) {
         turn = 3 - turn;
         // If no moves are available for either player (game is over)
-        if (findMoves() == 0) {
-            cout << "No moves remaining. Game has ended." << endl;
+        if (update() == 0) {
             return 0;
         }
         // If a turn was skipped but the game is not over
         else {
-            cout << "Skipped a turn because no moves were available." << endl;
             return turn;
         }
     }
@@ -184,28 +185,18 @@ int Othello::getState(int firstMove) {
 }
 
 
-int Othello::score() {
-    int black = 0;
-    int white = 0;
-    
-    // Count up the pieces
-    for (int i=1; i<9; i++) {
-        for (int j=1; j<9; j++) {
-            if (board[i][j] == 1) { black++; }
-            else if (board[i][j] == 2) { white++; }
-        }
-    }
+int othello::score() {
     
     // Identify the winner
     int winner;
-    if (black > white) { winner = 1; }
-    else if (white > black) { winner = 2; }
+    if (n_black > n_white) { winner = 1; }
+    else if (n_white > n_black) { winner = 2; }
     else { winner = 0; }
     
     // Print message
     cout << "Final Score:" << endl;
-    cout << "  Black: " << black << endl;
-    cout << "  White: " << white << endl;
+    cout << "  Black: " << n_black << endl;
+    cout << "  White: " << n_white << endl;
     cout << endl;
     if (winner == 0) { cout << "Match is a draw!" << endl; }
     else { cout << "Winner is PLAYER " << winner << "!" << endl; }

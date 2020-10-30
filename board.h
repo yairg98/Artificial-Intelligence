@@ -3,21 +3,23 @@
 
 using namespace std;
 
-// Othello class
+// othello class
 // Includes all othello-specific gameplay logic (e.g. - legal moves)
 // Could be modified to inherit abstract 'game' class
-class Othello {
+class othello {
     
 public:
 
     int board[10][10];
 	int legalMoves[10][10] = { 0 };
 	int n_moves; // number of legal moves available
+	int n_black; // number of pieces - player 1
+	int n_white; // number of pieces - player 2
     int turn; // 1 for black, 2 for white
 
 
     // Constructor for 'othello' class
-	Othello(int (&b)[8][8], int t=1);
+	othello(int (&b)[8][8], int t=1);
 
 
 	// Formats and prints board to standard output
@@ -59,7 +61,7 @@ private:
 	
 	// Update the legal moves array
 	// Returns the number of identified legal moves
-	int findMoves();
+	int update();
 	
 	
 };

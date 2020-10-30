@@ -9,7 +9,7 @@ using namespace std;
 
 
 // Loads and returns the gameboard (based on user selection)
-Othello loadBoard() {
+othello loadBoard() {
     top:;
     string input;
     // Optionally load  board position from a text file
@@ -31,7 +31,7 @@ Othello loadBoard() {
             {0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0}
         };
-        return Othello(board_0, 1);
+        return othello(board_0, 1);
     }
     
     else if (input == "2") {
@@ -55,7 +55,7 @@ Othello loadBoard() {
         }
         int turn;
         fp >> turn; // make sure this is 1 0r 2
-        return Othello(board_0, turn);
+        return othello(board_0, turn);
     }
     
     else {
@@ -72,12 +72,14 @@ int getPlayer(int p) {
 	int type;
 	cout << "Choose a type for PLAYER " << p << ":" << endl;
 	cout << "1. Human" << endl;
-	cout << "2. Random-selector bot" << endl;
+	cout << "2. Random Selector" << endl;
+	cout << "3. AI Bot" << endl;
 	cin >> type;
 	if ( !cin.good() ) { goto top; }
     
 	else if (type == 1) { return 1; }
 	else if (type == 2) { return 2; }
+	else if (type == 3) { return 3; }
     
 	else {goto top; }
 }
@@ -95,11 +97,13 @@ int main() {
         type = getPlayer(i);
         if (type == 1) { players.emplace_back( new Human() ); }
         else if (type == 2) { players.emplace_back( new Random() ); }
+		else if (type == 3) { players.emplace_back( new Bot() ); }
 	}
     
 	// Load and start the game
-    Othello game = loadBoard();
-	int state = game.getState(1); // 1 or 2 for turn, or 0 for game over
+    othello game = loadBoard();
+	int state, temp;
+	state = game.getState(1); // 1 or 2 for turn, or 0 for game over
     
     // Continue making moves until the game ends
     int move;
@@ -112,7 +116,15 @@ int main() {
 			move = players[state-1]->getMove(game);
             legal = game.doMove(move);
         }
-        state = game.getState();
+		// Check for skipped turn or end of game
+        temp = game.getState();
+		if (temp == state) { 
+			cout << "Skipped a turn because no moves were available." << endl;
+		}
+		else if (temp == 0) {
+			cout << "No moves remaining. Game has ended." << endl;
+		}
+		state = temp;
 	}
     
     game.print();
