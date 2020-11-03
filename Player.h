@@ -73,6 +73,10 @@ public:
 
 // Basic bot - selects a move at random
 class Bot: public Player {
+	
+private:
+	// Set the player time limit
+	chrono::seconds limit = chrono::seconds(5);
 
 public:
 
@@ -85,10 +89,10 @@ public:
 	// Search a specific depth
 	int searchDepth(othello &game, int depth);
 	
-	// Return the highest-value child move, with its value
+	// Return the highest-value child move
 	pair<int, int> maxVal(othello &game, int remaining);
 
-	// Return the lowest-value child move, with its value
+	// Return the lowest-value child move
 	pair<int, int> minVal(othello &game, int remaining);
 	
 };
