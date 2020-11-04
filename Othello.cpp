@@ -95,9 +95,9 @@ int main() {
     int type;
 	for ( int i : {1, 2} ) {
         type = getPlayer(i);
-        if (type == 1) { players.emplace_back( new Human() ); }
-        else if (type == 2) { players.emplace_back( new Random() ); }
-		else if (type == 3) { players.emplace_back( new Bot() ); }
+        if (type == 1) { players.emplace_back( new Human(i) ); }
+        else if (type == 2) { players.emplace_back( new Random(i) ); }
+		else if (type == 3) { players.emplace_back( new Bot(i) ); }
 	}
     
 	// Load and start the game

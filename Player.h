@@ -14,7 +14,12 @@ using namespace std;
 class Player {
 
 public:
-    
+	
+	// Set player ID
+	int id;
+	
+	Player(int n): id(n) {}
+	
 	// Selects and returns a move 
 	virtual int getMove(othello &game) {
         return 0;
@@ -27,6 +32,8 @@ public:
 class Human: public Player {
 	
 public:
+
+	Human(int n): Player(n) {}
 
 	// Allow user to select a move
 	int getMove(othello &game) {
@@ -57,7 +64,7 @@ class Random: public Player {
 
 public:
 
-    Random() {
+    Random(int n): Player(n) {
         srand(time(NULL));
     }
 
@@ -76,9 +83,30 @@ class Bot: public Player {
 	
 private:
 	// Set the player time limit
-	chrono::seconds limit = chrono::seconds(5);
+	chrono::seconds limit; // = chrono::seconds(2);
 
 public:
+
+	// Constructor for Bot - sets player ID and time limit (maybe chooses heuristic)
+	Bot(int n): Player(n) {
+		
+		int lim = 0;
+		bool valid= false;
+		
+		while (!valid) {
+			cout << "Choose an time limit (in seconds) for PLAYER " << id << ": ";
+			cin >> lim;
+			
+			if (cin.good()) { valid = true; }
+			
+			else {
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(),'\n');
+				cout << "Invalid input. Try again.\n" << endl;
+			}
+		}
+		limit = chrono::seconds(lim);
+	}
 
 	// Prompt the player to make a move
 	int getMove(othello &game);
@@ -90,9 +118,9 @@ public:
 	int searchDepth(othello &game, int depth);
 	
 	// Return the highest-value child move
-	pair<int, int> maxVal(othello &game, int remaining);
+	int maxVal(othello &game, int remaining);
 
 	// Return the lowest-value child move
-	pair<int, int> minVal(othello &game, int remaining);
+	int minVal(othello &game, int remaining);
 	
 };
