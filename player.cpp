@@ -7,7 +7,7 @@ using namespace std;
 
 int Bot::getMove(othello &game) {
 
-	// Initialize timer variables
+ 	// Initialize timer variables
 	chrono::steady_clock::time_point t1, t2;
 	chrono::duration<double> timeDiff;
 	
@@ -26,7 +26,7 @@ int Bot::getMove(othello &game) {
 	} while ( (timeDiff < limit/2) && (depth <= maxDepth) );
 	
 	// Search to specific depth (for testing)
-	// int best = searchDepth(game, 1);
+	// int best = searchDepth(game, 2);
 	
 	return best;
 	
@@ -63,12 +63,12 @@ int Bot::searchDepth(othello &game, int depth) {
 		
 		// Check the move's overall depth-utility
 		if ( (state==0) || (depth==0) ) { score = utility(child); }
-		else if (state != id) { score = minVal(child, depth-1); }
-		else { score = maxVal(child, depth-1); }
+		else if (state != id) { score = minVal(child, depth-1, INT_MIN, INT_MAX); }
+		else { score = maxVal(child, depth-1, INT_MIN, INT_MAX); }
 		
-		// cout << "Depth = " << depth << endl;
-		// cout << "State = " << state << ", ID = " << id << endl;
-		// cout << "Move = " << i << ", Score = " << score << endl;
+		cout << "Depth = " << depth << endl;
+		cout << "State = " << state << ", ID = " << id << endl;
+		cout << "Move = " << i << ", Score = " << score << endl;
 		
 		// Save the best move and its utility score
 		if (score > best_score) {
@@ -77,16 +77,16 @@ int Bot::searchDepth(othello &game, int depth) {
 		}
 	}
 	
-	// cout << "Best Move = " << best_move << ", Best Score = " << best_score << endl;
+	cout << "Best Move = " << best_move << ", Best Score = " << best_score << endl;
 	
 	return best_move;
 }
 
 
-int Bot::maxVal(othello &game, int d) {
+int Bot::maxVal(othello &game, int d, int alpha, int beta) {
 	
 	othello child = game; // Copy the current game configuration
-	int n = game.n_moves, best = INT_MAX, state, v2;
+	int n = game.n_moves, best = INT_MIN, state, v2;
 	
 	// Iterate through every legal move
 	for (int i=1; i<n+1; i++) {
@@ -100,19 +100,26 @@ int Bot::maxVal(othello &game, int d) {
 		if ( (state==0) || (d==0) ) { v2 = utility(child); }
 		
 		// Switch to minVal if it's the other player's turn
-		else if (state != id) { v2 = minVal(child, d-1); }
+		else if (state != id) { v2 = minVal(child, d-1, alpha, beta); }
 		
 		// Run maxVal again if the opponents turn was skipped
-		else { v2 = maxVal(child, d-1); }
+		else { v2 = maxVal(child, d-1, alpha, beta); }
 		
-		best = min(best, v2);
+		// Check for new max-value move
+		if (v2 > best) {
+			best = v2;
+			alpha = max(alpha, best);
+		}
+		
+		// Alpha-Beta pruning addition
+		if (best >= beta) { return best; }
 	}
 	
 	return best;
 }
 
 
-int Bot::minVal(othello &game, int d) {
+int Bot::minVal(othello &game, int d, int alpha, int beta) {
 	
 	othello child = game; // Copy the current game configuration
 	int n = game.n_moves, best = INT_MAX, state, v2;
@@ -129,12 +136,19 @@ int Bot::minVal(othello &game, int d) {
 		if ( (state==0) || (d==0) ) { v2 = utility(child); }
 		
 		// Switch to minVal if it's the other player's turn
-		else if (state != id) { v2 = minVal(child, d-1); }
+		else if (state != id) { v2 = minVal(child, d-1, alpha, beta); }
 		
 		// Run maxVal again if the opponents turn was skipped
-		else { v2 = maxVal(child, d-1); }
+		else { v2 = maxVal(child, d-1, alpha, beta); }
 		
-		best = min(best, v2);
+		// Check for new min-value move
+		if (v2 < best) {
+			best = min(best, v2);
+			beta = min(beta, best);
+		}
+		
+		// Alpha-Beta pruning addition
+		if (best <= alpha) { return best; }
 	}
 	
 	return best;

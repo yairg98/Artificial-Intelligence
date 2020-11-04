@@ -118,9 +118,9 @@ public:
 	int searchDepth(othello &game, int depth);
 	
 	// Return the highest-value child move
-	int maxVal(othello &game, int remaining);
+	int maxVal(othello &game, int depth, int alpha, int beta);
 
 	// Return the lowest-value child move
-	int minVal(othello &game, int remaining);
+	int minVal(othello &game, int depth, int alpha, int beta);
 	
 };
