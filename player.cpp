@@ -7,6 +7,8 @@ using namespace std;
 
 int Bot::getMove(othello &game) {
 
+	cout << "Thinking..." << endl;
+
  	// Initialize timer variables
 	chrono::steady_clock::time_point t1, t2;
 	chrono::duration<double> timeDiff;
@@ -66,9 +68,9 @@ int Bot::searchDepth(othello &game, int depth) {
 		else if (state != id) { score = minVal(child, depth-1, INT_MIN, INT_MAX); }
 		else { score = maxVal(child, depth-1, INT_MIN, INT_MAX); }
 		
-		cout << "Depth = " << depth << endl;
-		cout << "State = " << state << ", ID = " << id << endl;
-		cout << "Move = " << i << ", Score = " << score << endl;
+		// cout << "Depth = " << depth << endl;
+		// cout << "State = " << state << ", ID = " << id << endl;
+		// cout << "Move = " << i << ", Score = " << score << endl;
 		
 		// Save the best move and its utility score
 		if (score > best_score) {
@@ -77,7 +79,7 @@ int Bot::searchDepth(othello &game, int depth) {
 		}
 	}
 	
-	cout << "Best Move = " << best_move << ", Best Score = " << best_score << endl;
+	// cout << "Best Move = " << best_move << ", Best Score = " << best_score << endl;
 	
 	return best_move;
 }

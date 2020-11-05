@@ -163,7 +163,6 @@ int othello::doMove(int num) {
 
 
 int othello::getState(int firstMove) {
-    cout << endl;
     // Unless it's the first move, toggle turn
     if (!firstMove) {
         turn = 3 - turn;

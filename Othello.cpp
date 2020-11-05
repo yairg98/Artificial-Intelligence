@@ -114,7 +114,6 @@ int main() {
         cout << "PLAYER " << game.turn << endl;
         while (legal == 0) {
 			move = players[state-1]->getMove(game);
-			game.print(); // For testing
             legal = game.doMove(move);
         }
 		// Check for skipped turn or end of game
