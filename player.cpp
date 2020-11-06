@@ -24,6 +24,7 @@ int Bot::getMove(othello &game) {
 	do {
 		next = searchDepth(game, depth++, stopTime); // Get best move from next level
 		if (next != 0) { best = next; } // next == 0 if the search ran out of time
+		else { --depth; }
 		t2 = chrono::steady_clock::now(); // Check the time
 		timeDiff = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
 		//cout << timeDiff.count() << endl;
@@ -34,7 +35,7 @@ int Bot::getMove(othello &game) {
 	
 	// Search to specific depth (for testing)
 	// int best = searchDepth(game, 2);
-	cout << "Searched to depth: " << depth << endl;
+	cout << "Searched to depth: " << --depth << endl;
 	cout << "Move selected: " << best << endl;
 	return best;
 	
@@ -81,6 +82,9 @@ int Bot::searchDepth(othello &game, int depth, chrono::steady_clock::time_point 
 		}
 	}
 	
+	// Check the time again to make sure the level was searched to completion
+	if (chrono::steady_clock::now() >= stopTime) { return 0; }
+	
 	return best_move;
 }
 
@@ -119,6 +123,9 @@ double Bot::maxVal(othello &game, int d, double alpha, double beta, chrono::stea
 		if (best >= beta) { return best; }
 	}
 	
+	// Check the time again to make sure the level was searched to completion
+	if (chrono::steady_clock::now() >= stopTime) { return - numeric_limits<double>::infinity(); }
+	
 	return best;
 }
 
@@ -156,6 +163,9 @@ double Bot::minVal(othello &game, int d, double alpha, double beta, chrono::stea
 		// Alpha-Beta pruning addition
 		if (best <= alpha) { return best; }
 	}
+	
+	// Check the time again to make sure the level was searched to completion
+	if (chrono::steady_clock::now() >= stopTime) { return DBL_MAX; }
 	
 	return best;
 }
