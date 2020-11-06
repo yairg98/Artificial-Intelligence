@@ -11,7 +11,7 @@ player.o: player.cpp player.h
 	g++ -c player.cpp
 
 debug:
-	g++ -g -o othello.exe othello.cpp board.cpp
+	g++ -g -o othello.exe othello.cpp board.cpp player.cpp
 
 clean:
 	rm -f *.exe *.o *.stackdump *~

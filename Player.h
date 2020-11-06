@@ -90,6 +90,9 @@ public:
 	// Constructor for Bot - sets player ID and time limit (maybe chooses heuristic)
 	Bot(int n): Player(n) {
 		
+		// Set up randomizer for use in the heuristic function
+		srand(time(NULL));
+		
 		int lim = 0;
 		bool valid= false;
 		
@@ -112,15 +115,15 @@ public:
 	int getMove(othello &game);
 	
 	// Heuristic function
-	int utility(othello &game);
+	double utility(othello &game);
 	
 	// Search a specific depth
-	int searchDepth(othello &game, int depth);
+	int searchDepth(othello &game, int depth, chrono::steady_clock::time_point stopTime);
 	
 	// Return the highest-value child move
-	int maxVal(othello &game, int depth, int alpha, int beta);
+	double maxVal(othello &game, int depth, double alpha, double beta, chrono::steady_clock::time_point stopTime);
 
 	// Return the lowest-value child move
-	int minVal(othello &game, int depth, int alpha, int beta);
+	double minVal(othello &game, int depth, double alpha, double beta, chrono::steady_clock::time_point stopTime);
 	
 };
