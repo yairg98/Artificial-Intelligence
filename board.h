@@ -12,7 +12,9 @@ public:
 
     int board[10][10];
 	int legalMoves[10][10] = { 0 };
+	int coords[64][2];
 	int n_moves; // number of legal moves available
+	int n_moves_prev; // Number of moves available during previous turn (for implementing zero-sum heuristic)
 	int n_black; // number of pieces - player 1
 	int n_white; // number of pieces - player 2
     int turn; // 1 for black, 2 for white

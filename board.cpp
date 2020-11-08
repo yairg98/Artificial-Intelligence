@@ -37,6 +37,31 @@ othello::othello(int (&b)[8][8], int t) {
 		columnLabels += "\u0020\033[31;42m\u2502\033[m";
 	}
 	
+	// Set the order in which potential moves should be checked
+	int x=0, i, j;
+	int typo_coords[16][2] = { {1,1}, {3,3}, {1,3}, {3,1}, {1,4}, {4,1},
+	{3,4}, {4,3}, {4,4}, {2,4}, {4,2}, {2,3}, {3,2}, {1,2}, {2,1}, {2,2} };
+	
+	for (int y=0; y<16; y++) {
+		// Set i and j for upper left corner
+		i = typo_coords[y][0];
+		j = typo_coords[y][1];
+		
+		// Add coordinates [i,j] and corresponding symmetric points
+		coords[x][0] = i;
+		coords[x][1] = j;
+		x++;
+		coords[x][0] = i;
+		coords[x][1] = 9-j;
+		x++;
+		coords[x][0] = 9-i;
+		coords[x][1] = j;
+		x++;
+		coords[x][0] = 9-i;
+		coords[x][1] = 9-j;
+		x++;
+	}	
+	
 	// Set initial legal moves
 	update();
 }
@@ -108,6 +133,7 @@ int othello::flipTiles(int i0, int j0) {
 
 int othello::update() {
 	
+	n_moves_prev = n_moves;
 	n_moves = 0;
 	n_black = 0;
 	n_white = 0;
@@ -122,27 +148,29 @@ int othello::update() {
     }
     
     // Find all legal moves
-	for (int i=1; i<9; i++) {
-		for (int j=1; j<9; j++) {
+	int i, j;
+	for (int x=0; x<64; x++) {
+		
+		i = coords[x][0];
+		j = coords[x][1];
 			
-			// If space isn't empty, check next space
-			if (board[i][j] != 0) {
-				continue;
-			}
-			
-			// If space is empty, check for flippable tiles in each direction
-			for (int di : {-1, 0, 1}) {
-				for (int dj : {-1, 0, 1}) {
-					
-                    // Check if tiles can be flipped in that direction
-                    if ( checkDirection(i, j, di, dj) == 1 ) {
-                        legalMoves[i][j] = ++n_moves;
-                        goto nextSpace;
-                    }
+		// If space isn't empty, check next space
+		if (board[i][j] != 0) {
+			continue;
+		}
+		
+		// If space is empty, check for flippable tiles in each direction
+		for (int di : {-1, 0, 1}) {
+			for (int dj : {-1, 0, 1}) {
+				
+				// Check if tiles can be flipped in that direction
+				if ( checkDirection(i, j, di, dj) == 1 ) {
+					legalMoves[i][j] = ++n_moves;
+					goto nextSpace;
 				}
 			}
-			nextSpace:;
 		}
+		nextSpace:;
 	}
 	return n_moves;
 }

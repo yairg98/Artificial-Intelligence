@@ -78,10 +78,12 @@ public:
 };
 
 
-// Basic bot - selects a move at random
+// Performs Minimax search with Alpha-Beta pruning
+// Currently uses basic piece-counting heuristic
 class Bot: public Player {
 	
 private:
+	
 	// Set the player time limit
 	chrono::seconds limit; // = chrono::seconds(2);
 
@@ -93,6 +95,7 @@ public:
 		// Set up randomizer for use in the heuristic function
 		srand(time(NULL));
 		
+		// Prompt user for the time limit in seconds
 		int lim = 0;
 		bool valid= false;
 		
@@ -108,6 +111,62 @@ public:
 				cout << "Invalid input. Try again.\n" << endl;
 			}
 		}
+		// Set the time limit
+		limit = chrono::seconds(lim);
+	}
+
+	// Prompt the player to make a move
+	int getMove(othello &game);
+	
+	// Heuristic function
+	double utility(othello &game);
+	
+	// Search a specific depth
+	int searchDepth(othello &game, int depth, chrono::steady_clock::time_point stopTime);
+	
+	// Return the highest-value child move
+	double maxVal(othello &game, int depth, double alpha, double beta, chrono::steady_clock::time_point stopTime);
+
+	// Return the lowest-value child move
+	double minVal(othello &game, int depth, double alpha, double beta, chrono::steady_clock::time_point stopTime);
+	
+};
+
+
+// Previous version of bot - for testing purposes
+// Same as current version, but without pre-search move-ordering
+class Bot2: public Player {
+	
+private:
+	
+	// Set the player time limit
+	chrono::seconds limit; // = chrono::seconds(2);
+
+public:
+
+	// Constructor for Bot - sets player ID and time limit (maybe chooses heuristic)
+	Bot2(int n): Player(n) {
+		
+		// Set up randomizer for use in the heuristic function
+		srand(time(NULL));
+		
+		// Prompt user for the time limit in seconds
+		int lim = 0;
+		bool valid= false;
+		
+		while (!valid) {
+			cout << "Choose an time limit (in seconds) for PLAYER " << id << ": ";
+			cin >> lim;
+			
+			if (cin.good()) { valid = true; }
+			
+			else {
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(),'\n');
+				cout << "Invalid input. Try again.\n" << endl;
+			}
+		}
+		// Set the time limit
 		limit = chrono::seconds(lim);
 	}
 

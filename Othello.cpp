@@ -72,8 +72,8 @@ int getPlayer(int p) {
 	int type;
 	cout << "Choose a type for PLAYER " << p << ":" << endl;
 	cout << "1. Human" << endl;
-	cout << "2. Random Selector" << endl;
-	cout << "3. AI Bot" << endl;
+	cout << "2. AI Bot (current version)" << endl;
+	cout << "3. AI Bot (previous version)" << endl;
 	cin >> type;
 	if ( !cin.good() ) { goto top; }
     
@@ -96,8 +96,8 @@ int main() {
 	for ( int i : {1, 2} ) {
         type = getPlayer(i);
         if (type == 1) { players.emplace_back( new Human(i) ); }
-        else if (type == 2) { players.emplace_back( new Random(i) ); }
-		else if (type == 3) { players.emplace_back( new Bot(i) ); }
+        else if (type == 2) { players.emplace_back( new Bot(i) ); }
+		else if (type == 3) { players.emplace_back( new Bot2(i) ); }
 	}
     
 	// Load and start the game
