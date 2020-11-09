@@ -133,8 +133,8 @@ int othello::flipTiles(int i0, int j0) {
 
 int othello::update() {
 	
-	n_moves_prev = n_moves;
-	n_moves = 0;
+	prev_moves = curr_moves;
+	curr_moves = 0;
 	n_black = 0;
 	n_white = 0;
 	
@@ -165,14 +165,14 @@ int othello::update() {
 				
 				// Check if tiles can be flipped in that direction
 				if ( checkDirection(i, j, di, dj) == 1 ) {
-					legalMoves[i][j] = ++n_moves;
+					legalMoves[i][j] = ++curr_moves;
 					goto nextSpace;
 				}
 			}
 		}
 		nextSpace:;
 	}
-	return n_moves;
+	return curr_moves;
 }
 
 

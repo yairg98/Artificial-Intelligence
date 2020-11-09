@@ -72,7 +72,7 @@ public:
         // Short pause to "think" - better playing experience
         cout << "Thinking..." << endl;
         // this_thread::sleep_for(chrono::seconds(1));
-		return ( 1 + rand() % game.n_moves );
+		return ( 1 + rand() % game.curr_moves );
 	}
 
 };

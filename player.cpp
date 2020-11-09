@@ -56,7 +56,7 @@ double Bot::utility(othello &game) {
 int Bot::searchDepth(othello &game, int depth, chrono::steady_clock::time_point stopTime) {
 	
 	othello child = game; // Copy the current game configuration
-	int n = game.n_moves, state, best_move = 0;
+	int n = game.curr_moves, state, best_move = 0;
 	double best_score = - numeric_limits<double>::infinity(), score;
 	
 	// For each 1st-generation child
@@ -92,7 +92,7 @@ int Bot::searchDepth(othello &game, int depth, chrono::steady_clock::time_point 
 double Bot::maxVal(othello &game, int d, double alpha, double beta, chrono::steady_clock::time_point stopTime) {
 	
 	othello child = game; // Copy the current game configuration
-	int n = game.n_moves, state;
+	int n = game.curr_moves, state;
 	double best = - numeric_limits<double>::infinity(), v2;
 	
 	// Iterate through every legal move
@@ -133,7 +133,7 @@ double Bot::maxVal(othello &game, int d, double alpha, double beta, chrono::stea
 double Bot::minVal(othello &game, int d, double alpha, double beta, chrono::steady_clock::time_point stopTime) {
 	
 	othello child = game; // Copy the current game configuration
-	int n = game.n_moves, state;
+	int n = game.curr_moves, state;
 	double best = DBL_MAX, v2;
 	
 	// Iterate through every legal move
