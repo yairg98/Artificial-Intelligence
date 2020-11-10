@@ -69,10 +69,16 @@ inline int Bot2::pieces(othello &game) {
 }
 
 
-// inline int Bot2::weights(othello &game) {
-	// int net = 0;
-	// for 
-// }
+inline int Bot2::corners(othello &game) {
+	int diff = 0;
+	for (int i : {1,8}) {
+		for (int j : {1,8}) {
+			if (game.board[i][j] == 1) { diff++; }
+			else if (game.board[i][j] == 2) { diff--; }
+		}
+	}
+	return id==1 ? diff : -diff;
+}
 
 
 int Bot2::searchDepth(othello &game, int depth, chrono::steady_clock::time_point stopTime) {
