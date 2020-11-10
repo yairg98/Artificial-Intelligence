@@ -86,6 +86,9 @@ private:
 	
 	// Set the player time limit
 	chrono::seconds limit; // = chrono::seconds(2);
+	
+	// Board weights for strategic value
+	int weights;
 
 public:
 
@@ -120,6 +123,12 @@ public:
 	
 	// Heuristic function
 	double utility(othello &game);
+	
+	// Returns mobility metric for use in heuristic function
+	inline int mobility(othello &game);
+	
+	// Returns difference in number of pieces on the board for use in heuristic function
+	inline int pieces(othello &game);
 	
 	// Search a specific depth
 	int searchDepth(othello &game, int depth, chrono::steady_clock::time_point stopTime);
