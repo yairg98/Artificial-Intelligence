@@ -130,6 +130,9 @@ public:
 	// Returns difference in number of pieces on the board for use in heuristic function
 	inline int pieces(othello &game);
 	
+	// Returns number of black corners minus number of white corners
+	inline int corners(othello &game);
+	
 	// Search a specific depth
 	int searchDepth(othello &game, int depth, chrono::steady_clock::time_point stopTime);
 	
@@ -184,6 +187,12 @@ public:
 	
 	// Heuristic function
 	double utility(othello &game);
+	
+	// Returns mobility metric for use in heuristic function
+	inline int mobility(othello &game);
+	
+	// Returns difference in number of pieces on the board for use in heuristic function
+	inline int pieces(othello &game);
 	
 	// Search a specific depth
 	int searchDepth(othello &game, int depth, chrono::steady_clock::time_point stopTime);

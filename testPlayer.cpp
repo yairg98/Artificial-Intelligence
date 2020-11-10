@@ -44,13 +44,35 @@ int Bot2::getMove(othello &game) {
 
 double Bot2::utility(othello &game) {
 	
-	double diff = double(game.n_black - game.n_white); // Subtract PLAYER 2 pieces from PLAYER 1 pieces
-	diff += rand() / RAND_MAX;
-	if (id == 1) { return diff; } // Return positive for PLAYER 1 heuristic
-	else if (id==2) { return -diff; } // Return negative for PLAYER 2 heuristic
+	double h = 0;
 	
-	return 0; // Should never happen
+	h += pieces(game);
+	h += mobility(game);
+	// h += weights(game);
+	
+	// Add small random value to ensure equal moves are chosen between at random
+	h += double(rand()) / RAND_MAX - 0.5;
+	
+	return h;
 }
+
+
+inline int Bot2::mobility(othello &game) {
+	int diff = (game.curr_moves - game.prev_moves);
+	return game.turn==id ? diff : -diff;
+}
+
+
+inline int Bot2::pieces(othello &game) {
+	int diff = game.n_black - game.n_white;
+	return id==1 ? diff : -diff; // Invert difference depending on the player
+}
+
+
+// inline int Bot2::weights(othello &game) {
+	// int net = 0;
+	// for 
+// }
 
 
 int Bot2::searchDepth(othello &game, int depth, chrono::steady_clock::time_point stopTime) {

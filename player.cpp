@@ -48,6 +48,7 @@ double Bot::utility(othello &game) {
 	
 	h += pieces(game);
 	h += mobility(game);
+	h += 10 * corners(game);
 	// h += weights(game);
 	
 	// Add small random value to ensure equal moves are chosen between at random
@@ -66,6 +67,18 @@ inline int Bot::mobility(othello &game) {
 inline int Bot::pieces(othello &game) {
 	int diff = game.n_black - game.n_white;
 	return id==1 ? diff : -diff; // Invert difference depending on the player
+}
+
+
+inline int Bot::corners(othello &game) {
+	int diff = 0;
+	for (int i : {1,8}) {
+		for (int j : {1,8}) {
+			if (game.board[i][j] == 1) { diff++; }
+			else if (game.board[i][j] == 2) { diff--; }
+		}
+	}
+	return id==1 ? diff : -diff;
 }
 
 
