@@ -86,9 +86,6 @@ private:
 	
 	// Set the player time limit
 	chrono::seconds limit; // = chrono::seconds(2);
-	
-	// Board weights for strategic value
-	int weights;
 
 public:
 
@@ -132,6 +129,9 @@ public:
 	
 	// Returns number of black corners minus number of white corners
 	inline int corners(othello &game);
+		
+	// Detract points from heuristic for spaces neighboring corners
+	inline int nearCorners(othello &game);
 	
 	// Search a specific depth
 	int searchDepth(othello &game, int depth, chrono::steady_clock::time_point stopTime);
@@ -182,28 +182,22 @@ public:
 		limit = chrono::seconds(lim);
 	}
 
-	// Prompt the player to make a move
 	int getMove(othello &game);
 	
-	// Heuristic function
 	double utility(othello &game);
 	
-	// Returns mobility metric for use in heuristic function
-	int mobility(othello &game);
+	inline int mobility(othello &game);
 	
-	// Returns difference in number of pieces on the board for use in heuristic function
-	int pieces(othello &game);
+	inline int pieces(othello &game);
 	
-	// Returns number of black corners minus number of white corners
-	int corners(othello &game);
+	inline int corners(othello &game);
 	
-	// Search a specific depth
+	inline int nearCorners(othello &game);
+		
 	int searchDepth(othello &game, int depth, chrono::steady_clock::time_point stopTime);
 	
-	// Return the highest-value child move
 	double maxVal(othello &game, int depth, double alpha, double beta, chrono::steady_clock::time_point stopTime);
 
-	// Return the lowest-value child move
 	double minVal(othello &game, int depth, double alpha, double beta, chrono::steady_clock::time_point stopTime);
 	
 };

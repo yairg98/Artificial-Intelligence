@@ -49,7 +49,7 @@ double Bot::utility(othello &game) {
 	h += pieces(game);
 	h += mobility(game);
 	h += 10 * corners(game);
-	// h += weights(game);
+	h += nearCorners(game);
 	
 	// Add small random value to ensure equal moves are chosen between at random
 	h += double(rand()) / RAND_MAX - 0.5;
@@ -82,10 +82,32 @@ inline int Bot::corners(othello &game) {
 }
 
 
-// inline int Bot::weights(othello &game) {
-	// int net = 0;
-	// for 
-// }
+inline int Bot::nearCorners(othello &game) {
+	int diff = 0;
+	for (int i : {2,7}) {
+		for (int j : {2,7}) {
+			if (game.board[i][j] == 1) { diff -= 2; }
+			else if (game.board[i][j] == 2) { diff += 2; }
+		}
+	}
+	
+	for (int i : {1,2}) {
+		for (int j : {1,2}) {
+			if (game.board[i][j] == 1) { diff--; }
+			else if (game.board[i][j] == 2) { diff++; }
+			
+			if (game.board[9-i][j] == 1) { diff--; }
+			else if (game.board[9-i][j] == 2) { diff++; }
+			
+			if (game.board[i][9-j] == 1) { diff--; }
+			else if (game.board[i][9-j] == 2) { diff++; }
+			
+			if (game.board[9-i][9-j] == 1) { diff--; }
+			else if (game.board[9-i][9-j] == 2) { diff++; }
+		}
+	}
+	return id==1 ? diff : -diff;
+}
 
 
 int Bot::searchDepth(othello &game, int depth, chrono::steady_clock::time_point stopTime) {
