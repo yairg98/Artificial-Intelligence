@@ -30,7 +30,7 @@ def getParams():
         
 
 # Get training data from text file
-def getTrainData():
+def getData():
     
     # Prompt the user for name of training data file
     filename = input("Enter the name of the training data file: ")
@@ -57,5 +57,5 @@ def getTrainData():
         
 # dims, weights = getParams()
 # NN = BPNN(dims, weights)
-# n, data = getTrainingData()
+# n, data = getData()
 # NN.train(data)
