@@ -1,7 +1,9 @@
 """
+Create and test neural network using BPNN class
+Load initialization parameters, training data, and testing data from text files
 
 """
-from BPNN import *
+from BPNN import BPNN
 
 
 # Get neural network parameters from text file
