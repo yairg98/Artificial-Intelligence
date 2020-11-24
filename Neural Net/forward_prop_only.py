@@ -4,23 +4,30 @@ Backpropogation Neural Network class
 '''
 
 import numpy as np
+# from collections import defaultdict
 
 
 # Backprop Neural Net class
 class BPNN:
     
-    # Constructor acceptingnetwork dimensions and optional pre-loaded weights
+    # Constructor accepting network dimensions and optional pre-loaded weights
+    # Assumes legal initialization parameters
     def __init__(self, dims, weights = 0):
         self.setParams(dims, weights)
         
         
     # Set or reset the dimensions and weights of the model
+    # dims is an array of ints where each represents the number of nodes in that layer
+    # weights is a 3D array of the weight between each two consecutive layers
     def setParams(self, dims, weights):
+        
         # If weights are not specified, generate them randomly
         if weights == 0:
-            # 3D array ( [layers-1] x [nodes in current layer] x [nodes in previous layer] )
             weights = [np.random.rand(dims[i], dims[i-1]+1) for i in range(1,len(dims))]
+        
         # Save network dimensions and weights
+        self.values = [[0]*i for i in dims]
+        self.deltas = [[0]*i for i in dims]
         self.dims = dims
         self.weights = weights
         
@@ -36,36 +43,29 @@ class BPNN:
         return sig*(1-sig)
     
     
-    # Get output value of a particular neuron
-    def nodeValue(self, prevLayer, weights):
-        # Start with bias value
-        s = -1 * weights[0]
-        # Add each weighted previous-layer node
-        for i in range(len(prevLayer)):
-            s += prevLayer[i]*weights[i+1]
-        # Apply sigmoid function and return the result
-        return self.sig(s)
+    # Update jth node in layer i
+    # Assumes previous layer is up-to-date and i!=0 (input layer)
+    def updateNode(self, i, j):
+        x = -1 * self.weights[i-1][j][0]
+        for n in range(self.dims[i-1]):
+            x += self.values[i-1][n] * self.weights[i-1][j][n+1]
+        x = self.sig(x)
+        self.values[i][j] = x
+        return x
     
     
-    # Evaluate next layer of node
-    def getLayer(self, prevLayer, weightMatrix):
-        nextLayer = []
-        # Calculate node values one at a time
-        for row in weightMatrix:
-            nextLayer.append(self.nodeValue(prevLayer, row))
-        # Return array of all evaluated nodes in the next layer
-        return nextLayer
+    # Update the ith layer in the network
+    # Assumed previous layer is up-to-date and 1!=0 (input layer)
+    def updateLayer(self, i):
+        for j in range(self.dims[i]):
+            self.updateNode(i, j)
+        return self.values[i]
     
     
-    # Forward-propogate input layer and return output predictions
-    def forwardProp(self, layer):
-        # Use each layer and weightMatrix to find the next
-        for weightMatrix in self.weights:
-            layer = self.getLayer(layer, weightMatrix)
-        # Return final layer
-        return layer
-    
-    
-    # Train the neural net on the provided data
-    def backProp(self, data):
-        pass
+    # Forward-propogate input values, and return the output layer
+    def forwardProp(self, inputs):
+        # Set input layer values
+        self.values[0] = inputs
+        for i in range(1,len(self.dims)):
+            self.updateLayer(i)
+        return self.values[-1]
