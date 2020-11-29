@@ -77,6 +77,10 @@ class BPNN:
             self.updateLayer(i)
         return self.values[-1]
     
+    
+    def predict(self, X):
+        return [round(y, 0) for y in self.forwardProp(X)]
+    
 
     # Back-propogates the error of the jth node in layer i
     # Makes same assumptions as layerError function (see below)
@@ -89,7 +93,7 @@ class BPNN:
         
         # Multiply error by derivative of transfer function and record/return
         e *= self.dsig(self.values[i][j])
-        self.deltas[i][j] = e        
+        self.deltas[i][j] = e
         return e
 
     
@@ -152,3 +156,63 @@ class BPNN:
                 self.backProp(X, Y) # Compare H to Y and back-propogate error
                 self.updateWeights(rate) # Update the model weights
                 
+                
+    def test(self, data):
+        
+        # Set initial values of confusion matrix quadrants to zero
+        A = [0] * self.dims[-1]
+        B = [0] * self.dims[-1]
+        C = [0] * self.dims[-1]
+        D = [0] * self.dims[-1]
+        
+        # Categorize the results of each data sample prediction
+        for X, Y in data:
+            H = self.predict(X)
+            
+            # Calculate separate results for each element in output layer 
+            for i in range(len(H)):
+
+                # If predicted value and actual value are both 1
+                if H[i] and Y[i]: A[i] += 1
+                
+                # If predicted value is 1 and actual value is 0
+                elif H[i]: B[i] += 1
+                
+                # If predicted value is 0 and actual value is 1
+                elif Y[i]: C[i] += 1
+                
+                # If predicted value and actual value are both 0
+                else: D[i] += 1
+        
+        # Calculate performance metrics for each element of output layer
+        accuracy = [ (A[i] + D[i]) / (A[i] + B[i] + C[i] + D[i]) for i in range(len(H)) ]
+        precision = [ A[i] / (A[i] + B[i]) for i in range(len(H)) ]
+        recall = [ A[i] / (A[i] + C[i]) for i in range(len(H)) ]
+        f1 = [ (2 * precision[i] * recall[i]) / (precision[i] + recall[i]) for i in range(len(H)) ]
+        
+        # Calculate micro-averaged performance metrics
+        a, b, c, d = sum(A), sum(B), sum(C), sum(D)
+        micro_accuracy = round( (a + d) / (a + b + c + d), 3)
+        micro_precision = round( a / (a + b), 3)
+        micro_recall = round( a / (a + c), 3)
+        micro_f1 = round( (2 * micro_precision * micro_recall) / (micro_precision + micro_recall), 3)
+
+        # Calculate macro-averaged performance metrics
+        macro_accuracy = round(np.average(accuracy), 3)
+        macro_precision = round(np.average(precision), 3)
+        macro_recall = round(np.average(recall), 3)
+        macro_f1 = round((2 * macro_precision * macro_recall) / (macro_precision + macro_recall), 3)
+        
+        # Round performance metrics to 3 decimal places
+        accuracy = [round(i,3) for i in accuracy]
+        precision = [round(i,3) for i in precision]
+        recall = [round(i,3) for i in recall]
+        f1 = [round(i,3) for i in f1]
+        
+        # Print test results
+        for i in range(len(H)):
+            print(A[i], B[i], C[i], D[i], accuracy[i], precision[i], recall[i], f1[i])
+            
+        print(micro_accuracy, micro_precision, micro_recall, micro_f1)
+        print(macro_accuracy, macro_precision, macro_recall, macro_f1)
+        
