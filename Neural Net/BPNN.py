@@ -38,8 +38,8 @@ class BPNN:
     
     # Derivative of the sigmoid function
     def dsig(self, x):
-        sig = self.sig(x)
-        return sig*(1-sig)
+        s = self.sig(x)
+        return s*(1-s)
     
     
     # Update jth node in layer i
@@ -129,7 +129,7 @@ class BPNN:
     # weight += (learning rate) * (output error) * (input value)
     def updateWeights(self, rate):
         
-        # Iterate through each set of weights between layers
+        # Iterate through each set of weights between layers i and i+1
         for i in range(len(self.weights)):
             
             # Iterate through each node that in layer following that set of weights
@@ -152,7 +152,6 @@ class BPNN:
             
             # Update weights once for each sample in given data
             for X, Y in data:
-                self.forwardProp(X) # Generate outputs H
                 self.backProp(X, Y) # Compare H to Y and back-propogate error
                 self.updateWeights(rate) # Update the model weights
                 
