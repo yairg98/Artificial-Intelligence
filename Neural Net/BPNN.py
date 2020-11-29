@@ -33,13 +33,12 @@ class BPNN:
         
     # Sigmoid function
     def sig(self, x):
-        return 1/(1+np.exp(-x))      
+        return 1/(1+np.exp(-x))
     
     
     # Derivative of the sigmoid function
     def dsig(self, x):
-        s = self.sig(x)
-        return s*(1-s)
+        return x*(1-x)
     
     
     # Update jth node in layer i
