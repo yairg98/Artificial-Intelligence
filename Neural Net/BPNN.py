@@ -14,24 +14,62 @@ class BPNN:
     
     # Constructor accepting network dimensions and optional pre-loaded weights
     # Assumes legal initialization parameters
-    def __init__(self, dims = [0,0], weights = 0):
-        self.setParams(dims, weights)
+    # Initial weights must be specified in the file
+    def __init__(self, filename):
+        self.setParams(filename)
         
+        
+    # Get neural network parameters from text file
+    def getParams(self, filename):
+        
+        # Read the input file
+        infile = open(filename, 'r')
+        lines = infile.readlines()
+        infile.close()
+        
+        # Read NN dimensions from first line of input file
+        dims = list(map(int,lines[0].split()))
+        
+        # Read and parse initial NN weights from input file
+        weights = []
+        n = 1
+        for i in range(1,len(dims)):
+            weights.append( [ list(map(float,line.split())) for line in lines[n : n+dims[i]] ] )
+            n += dims[i]
+            
+        # Returns reformatted network dimensions and initial weights
+        return dims, weights
+
         
     # Set or reset the dimensions and weights of the model
-    # dims contains the number of nodes in each layer of the network
-    # weights is a 3D array of the multiplicative weights between network layers
-    def setParams(self, dims, weights):
-        
-        # If weights are not specified, generate them randomly
-        if weights == 0:
-            weights = [np.random.rand(dims[i], dims[i-1]+1) for i in range(1,len(dims))]
-        
-        # Save network dimensions and weights
+    def setParams(self, filename):
+        dims, weights = self.getParams(filename)
         self.values = [[0]*i for i in dims] # Current value of node (i,j)
         self.deltas = [[0]*i for i in dims] # Calculated error of node (i,j)
         self.dims = dims # Dimensions of the network
         self.weights = weights
+        
+        
+    # Get training data from text file
+    def getData(self, filename):
+        
+        # Read the input file
+        infile = open(filename, 'r')
+        lines = infile.readlines()
+        infile.close()
+        
+        # Get number of training samples (first line = [N-samples, N-in, N-out])
+        stats = list(map(int,lines[0].split()))
+        
+        # Read and parse training data samples from input file
+        data = []
+        for line in lines[1:]:
+            d1 = list(map(float,line.split()))[:stats[1]]
+            d2 = list(map(float,line.split()))[stats[1]:]
+            data.append( [d1, d2] )
+            
+        # Returns number of samples and reformatted data
+        return data
         
         
     # Sigmoid function
@@ -62,7 +100,7 @@ class BPNN:
     
     
     # Update the ith layer in the network
-    # Assumed previous layer is up-to-date and 1!=0 (input layer)
+    # Assumes previous layer is up-to-date and 1!=0 (input layer)
     def updateLayer(self, i):
         
         for j in range(self.dims[i]):
@@ -147,7 +185,10 @@ class BPNN:
                     
     # Train the model using provided data, learning rate, and number of epochs
     # Uses sequential gradient descent
-    def train(self, data, rate, epochs):
+    def train(self, datafile, rate, epochs):
+        
+        # Get data from file
+        data = self.getData(datafile)
         
         # Perform one full cycle of sequential gradient descent per epoch
         for epoch in range(epochs):
@@ -158,7 +199,10 @@ class BPNN:
                 self.updateWeights(rate) # Update the model weights
                 
                 
-    def test(self, data, outfile):
+    def test(self, datafile, outfile):
+        
+        # Get data from file
+        data = self.getData(datafile)
         
         # Set initial values of confusion matrix quadrants to zero
         A = [0] * self.dims[-1]
@@ -240,60 +284,7 @@ class BPNN:
         file.close()
         
         
-#%% Funcitions for retrieving and exporting data and network parameters
 
-
-# Get neural network parameters from text file
-def getParams():
-    
-    # Prompt the user for weights, training, and testing 
-    filename = input("Enter the name of the input file: ")
-    
-    # Read the input file
-    infile = open(filename, 'r')
-    lines = infile.readlines()
-    infile.close()
-    
-    # Read NN dimensions from fist line of input file
-    dims = list(map(int,lines[0].split()))
-    
-    # Read and parse initial NN weights from input file
-    weights = []
-    n = 1
-    for i in range(1,len(dims)):
-        weights.append( [ list(map(float,line.split())) for line in lines[n : n+dims[i]] ] )
-        n += dims[i]
-        
-    # Returns reformatted network dimensions and initial weights
-    return dims, weights
-        
-
-# Get training data from text file
-def getData():
-    
-    # Prompt the user for name of training data file
-    filename = input("Enter the name of the training data file: ")
-    
-    # Read the input file
-    infile = open(filename, 'r')
-    lines = infile.readlines()
-    infile.close()
-    
-    # Get number of training samples (first line = [N-samples, N-in, N-out])
-    stats = list(map(int,lines[0].split()))
-    
-    # Read and parse training data samples from input file
-    data = []
-    for line in lines[1:]:
-        d1 = list(map(float,line.split()))[:stats[1]]
-        d2 = list(map(float,line.split()))[stats[1]:]
-        data.append( [d1, d2] )
-        
-    # Returns number of samples and reformatted data
-    return stats[0], data
-        
-
-    
 #%% Driver code for testing BPNN functionality
 
 
