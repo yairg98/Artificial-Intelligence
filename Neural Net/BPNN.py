@@ -287,4 +287,34 @@ class BPNN:
 
 #%% Driver code for testing BPNN functionality
 
+# Assumes legal inputs for all prompts
 
+filename = input("Name of file containing initial network parameters: ")
+nn = BPNN(filename)
+
+while(1):
+    
+    print("""\nWould you like to... 
+          (1) load new network dimensions and weights from a text file
+          (2) train the network
+          (3) test the network
+          (4) export the network dimensions and weights to a text file""")
+    choice = input("(Enter the number corresponding to your selection): ")
+    
+    if choice == '1':
+        nn.setParams(input("Name of network-parameters file: "))
+        
+    elif choice == '2':
+        nn.train(input("Name of data file: "),
+                 float(input("Learning rate: ")),
+                 int(input("Number of epochs: ")))
+        
+    elif choice == '3':
+        nn.test(input("Name of data file: "),
+                input("Name of output file: "))
+        
+    elif choice == '4':
+        nn.export(input("Name of destination file: "))
+        
+    else:
+        print("Invalid entry. Try again.")
