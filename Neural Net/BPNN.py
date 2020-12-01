@@ -158,7 +158,7 @@ class BPNN:
                 self.updateWeights(rate) # Update the model weights
                 
                 
-    def test(self, data):
+    def test(self, data, outfile):
         
         # Set initial values of confusion matrix quadrants to zero
         A = [0] * self.dims[-1]
@@ -193,34 +193,53 @@ class BPNN:
         
         # Calculate micro-averaged performance metrics
         a, b, c, d = sum(A), sum(B), sum(C), sum(D)
-        micro_accuracy = round( (a + d) / (a + b + c + d), 3)
-        micro_precision = round( a / (a + b), 3)
-        micro_recall = round( a / (a + c), 3)
-        micro_f1 = round( (2 * micro_precision * micro_recall) / (micro_precision + micro_recall), 3)
+        micro_accuracy = (a + d) / (a + b + c + d)
+        micro_precision = a / (a + b)
+        micro_recall = a / (a + c)
+        micro_f1 = (2 * micro_precision * micro_recall) / (micro_precision + micro_recall)
+        micro = [micro_accuracy, micro_precision, micro_recall, micro_f1]
 
         # Calculate macro-averaged performance metrics
-        macro_accuracy = round(np.average(accuracy), 3)
-        macro_precision = round(np.average(precision), 3)
-        macro_recall = round(np.average(recall), 3)
-        macro_f1 = round((2 * macro_precision * macro_recall) / (macro_precision + macro_recall), 3)
+        macro_accuracy = np.average(accuracy)
+        macro_precision = np.average(precision)
+        macro_recall = np.average(recall)
+        macro_f1 = (2 * macro_precision * macro_recall) / (macro_precision + macro_recall)
+        macro = [macro_accuracy, macro_precision, macro_recall, macro_f1]
         
-        # Round performance metrics to 3 decimal places
-        accuracy = [round(i,3) for i in accuracy]
-        precision = [round(i,3) for i in precision]
-        recall = [round(i,3) for i in recall]
-        f1 = [round(i,3) for i in f1]
+        # Format and print results
+        output = open(outfile, 'w', newline='\n')
         
-        # Print test results
-        results = []
         for i in range(len(H)):
-            results.append( [A[i], B[i], C[i], D[i], accuracy[i], precision[i], recall[i], f1[i]] )
-            
-        results.append( [micro_accuracy, micro_precision, micro_recall, micro_f1] )
-        results.append( [macro_accuracy, macro_precision, macro_recall, macro_f1] )
+            # Format each element
+            line = [str(A[i]),
+                    str(B[i]),
+                    str(C[i]),
+                    str(D[i]),
+                    '{:.3f}'.format(accuracy[i]),
+                    '{:.3f}'.format(precision[i]),
+                    '{:.3f}'.format(recall[i]),
+                    '{:.3f}'.format(f1[i]) ]
+            # Write to file as space-separated string
+            output.write(' '.join(line) + '\n')
         
-        return results
+        # Format and print micro/macro-averaged results
+        output.write( ' '.join(map(str, ['{:.3f}'.format(x) for x in micro]))+'\n' )
+        output.write( ' '.join(map(str, ['{:.3f}'.format(x) for x in macro]))+'\n' )
         
-
+        
+    # Format and output network parameters (dims, weights) to a text file
+    def export(self, filename):
+        file = open(filename, 'w', newline='\n')
+        # Print dimensions on first line
+        file.write(' '.join(map(str,self.dims))+'\n')
+        # Print weights on remaining lines
+        for i in self.weights:
+            for j in i:
+                # Round each weight value to 3 decimal places
+                file.write(' '.join(map(str, ['{:.3f}'.format(k) for k in j]))+'\n')
+        file.close()
+        
+        
 #%% Funcitions for retrieving and exporting data and network parameters
 
 
@@ -272,27 +291,9 @@ def getData():
         
     # Returns number of samples and reformatted data
     return stats[0], data
-
-
-# Test network nn on the given data, and print results to file ('outfile')
-def getResults(nn, data, outfile):
-    output = open(outfile, 'w')
-    for line in nn.test(data):
-        output.write(' '.join(map(str, line))+'\n')
-    output.close()
         
 
-# Format and output network parameters (dims, weights) to a text file
-def exportNetwork(nn, filename):
-    file = open(filename, 'w')
-    # Print dimensions on first line
-    file.write(' '.join(map(str,nn.dims))+'\n')
-    # Print weights on remaining lines
-    for i in nn.weights:
-        for j in i:
-            # Round each weight value to 3 decimal places
-            file.write(' '.join(map(str, ['{:.3f}'.format(k) for k in j]))+'\n')
-    file.close()
     
-    
-#%% Driver code 
+#%% Driver code for testing BPNN functionality
+
+
