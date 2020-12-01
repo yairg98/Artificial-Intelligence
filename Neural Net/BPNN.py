@@ -6,12 +6,15 @@ Backpropogation Neural Network class
 import numpy as np
 
 
+#%% Backprop Neural Net Class
+
+
 # Backprop Neural Net class
 class BPNN:
     
     # Constructor accepting network dimensions and optional pre-loaded weights
     # Assumes legal initialization parameters
-    def __init__(self, dims, weights = 0):
+    def __init__(self, dims = [0,0], weights = 0):
         self.setParams(dims, weights)
         
         
@@ -208,9 +211,88 @@ class BPNN:
         f1 = [round(i,3) for i in f1]
         
         # Print test results
+        results = []
         for i in range(len(H)):
-            print(A[i], B[i], C[i], D[i], accuracy[i], precision[i], recall[i], f1[i])
+            results.append( [A[i], B[i], C[i], D[i], accuracy[i], precision[i], recall[i], f1[i]] )
             
-        print(micro_accuracy, micro_precision, micro_recall, micro_f1)
-        print(macro_accuracy, macro_precision, macro_recall, macro_f1)
+        results.append( [micro_accuracy, micro_precision, micro_recall, micro_f1] )
+        results.append( [macro_accuracy, macro_precision, macro_recall, macro_f1] )
         
+        return results
+        
+
+#%% Funcitions for retrieving and exporting data and network parameters
+
+
+# Get neural network parameters from text file
+def getParams():
+    
+    # Prompt the user for weights, training, and testing 
+    filename = input("Enter the name of the input file: ")
+    
+    # Read the input file
+    infile = open(filename, 'r')
+    lines = infile.readlines()
+    infile.close()
+    
+    # Read NN dimensions from fist line of input file
+    dims = list(map(int,lines[0].split()))
+    
+    # Read and parse initial NN weights from input file
+    weights = []
+    n = 1
+    for i in range(1,len(dims)):
+        weights.append( [ list(map(float,line.split())) for line in lines[n : n+dims[i]] ] )
+        n += dims[i]
+        
+    # Returns reformatted network dimensions and initial weights
+    return dims, weights
+        
+
+# Get training data from text file
+def getData():
+    
+    # Prompt the user for name of training data file
+    filename = input("Enter the name of the training data file: ")
+    
+    # Read the input file
+    infile = open(filename, 'r')
+    lines = infile.readlines()
+    infile.close()
+    
+    # Get number of training samples (first line = [N-samples, N-in, N-out])
+    stats = list(map(int,lines[0].split()))
+    
+    # Read and parse training data samples from input file
+    data = []
+    for line in lines[1:]:
+        d1 = list(map(float,line.split()))[:stats[1]]
+        d2 = list(map(float,line.split()))[stats[1]:]
+        data.append( [d1, d2] )
+        
+    # Returns number of samples and reformatted data
+    return stats[0], data
+
+
+# Test network nn on the given data, and print results to file ('outfile')
+def getResults(nn, data, outfile):
+    output = open(outfile, 'w')
+    for line in nn.test(data):
+        output.write(' '.join(map(str, line))+'\n')
+    output.close()
+        
+
+# Format and output network parameters (dims, weights) to a text file
+def exportNetwork(nn, filename):
+    file = open(filename, 'w')
+    # Print dimensions on first line
+    file.write(' '.join(map(str,nn.dims))+'\n')
+    # Print weights on remaining lines
+    for i in nn.weights:
+        for j in i:
+            # Round each weight value to 3 decimal places
+            file.write(' '.join(map(str, ['{:.3f}'.format(k) for k in j]))+'\n')
+    file.close()
+    
+    
+#%% Driver code 
