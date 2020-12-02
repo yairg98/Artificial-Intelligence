@@ -296,34 +296,34 @@ choice = ""
 while(1):
     
     print("""\nWould you like to... 
-          (1) Load new network from a text file
+          (1) Load network from text file
           (2) Train the network
           (3) Test the network
-          (4) Export the network to a text file
+          (4) Export network to text file
           (5) Quit""")
     choice = input("(Enter the number corresponding to your selection): ")
     
-    # try:
-    if choice == '1':
-        nn.setParams(input("Name of network-parameters file: "))
-        
-    elif choice == '2':
-        nn.train(input("Name of training data file: "),
-                 float(input("Learning rate: ")),
-                 int(input("Number of epochs: ")))
-        
-    elif choice == '3':
-        nn.test(input("Name of testing data file: "),
-                input("Name of output file: "))
-        
-    elif choice == '4':
-        nn.export(input("Name of destination file: "))
-        
-    elif choice == '5':
-        break
-        
-    else:
-        print("Invalid entry. Try again.")
+    try:
+        if choice == '1':
+            nn.setParams(input("Name of network-parameters file: "))
             
-    # except:
-    #     print("Invalid entry. try again.")
+        elif choice == '2':
+            nn.train(input("Name of training data file: "),
+                     float(input("Learning rate: ")),
+                     int(input("Number of epochs: ")))
+            
+        elif choice == '3':
+            nn.test(input("Name of testing data file: "),
+                    input("Name of output file: "))
+            
+        elif choice == '4':
+            nn.export(input("Name of destination file: "))
+            
+        elif choice == '5':
+            break
+            
+        else:
+            print("Invalid entry. Try again.")
+                
+    except:
+        print("Invalid entry. try again.")
