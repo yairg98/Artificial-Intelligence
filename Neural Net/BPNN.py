@@ -231,23 +231,23 @@ class BPNN:
         
         # Calculate performance metrics for each element of output layer
         accuracy = [ (A[i] + D[i]) / (A[i] + B[i] + C[i] + D[i]) for i in range(len(H)) ]
-        precision = [ A[i] / (A[i] + B[i]) for i in range(len(H)) ]
-        recall = [ A[i] / (A[i] + C[i]) for i in range(len(H)) ]
-        f1 = [ (2 * precision[i] * recall[i]) / (precision[i] + recall[i]) for i in range(len(H)) ]
+        precision = [ 0 if A[i]==0 else A[i] / (A[i] + B[i]) for i in range(len(H)) ]
+        recall = [ 0 if A[i]==0 else A[i] / (A[i] + C[i]) for i in range(len(H)) ]
+        f1 = [ 0 if A[i]==0 else (2 * precision[i] * recall[i]) / (precision[i] + recall[i]) for i in range(len(H)) ]
         
         # Calculate micro-averaged performance metrics
         a, b, c, d = sum(A), sum(B), sum(C), sum(D)
         micro_accuracy = (a + d) / (a + b + c + d)
-        micro_precision = a / (a + b)
-        micro_recall = a / (a + c)
-        micro_f1 = (2 * micro_precision * micro_recall) / (micro_precision + micro_recall)
+        micro_precision = 0 if a==0 else a / (a + b)
+        micro_recall = 0 if a==0 else a / (a + c)
+        micro_f1 = 0 if a==0 else (2 * micro_precision * micro_recall) / (micro_precision + micro_recall)
         micro = [micro_accuracy, micro_precision, micro_recall, micro_f1]
 
         # Calculate macro-averaged performance metrics
         macro_accuracy = np.average(accuracy)
         macro_precision = np.average(precision)
         macro_recall = np.average(recall)
-        macro_f1 = (2 * macro_precision * macro_recall) / (macro_precision + macro_recall)
+        macro_f1 = 0 if a==0 else (2 * macro_precision * macro_recall) / (macro_precision + macro_recall)
         macro = [macro_accuracy, macro_precision, macro_recall, macro_f1]
         
         # Format and print results
@@ -292,29 +292,38 @@ class BPNN:
 filename = input("Name of file containing initial network parameters: ")
 nn = BPNN(filename)
 
+choice = ""
 while(1):
     
     print("""\nWould you like to... 
-          (1) load new network dimensions and weights from a text file
-          (2) train the network
-          (3) test the network
-          (4) export the network dimensions and weights to a text file""")
+          (1) Load new network from a text file
+          (2) Train the network
+          (3) Test the network
+          (4) Export the network to a text file
+          (5) Quit""")
     choice = input("(Enter the number corresponding to your selection): ")
     
+    # try:
     if choice == '1':
         nn.setParams(input("Name of network-parameters file: "))
         
     elif choice == '2':
-        nn.train(input("Name of data file: "),
+        nn.train(input("Name of training data file: "),
                  float(input("Learning rate: ")),
                  int(input("Number of epochs: ")))
         
     elif choice == '3':
-        nn.test(input("Name of data file: "),
+        nn.test(input("Name of testing data file: "),
                 input("Name of output file: "))
         
     elif choice == '4':
         nn.export(input("Name of destination file: "))
         
+    elif choice == '5':
+        break
+        
     else:
         print("Invalid entry. Try again.")
+            
+    # except:
+    #     print("Invalid entry. try again.")
