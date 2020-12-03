@@ -25,10 +25,11 @@ is the age of the micture, given in days (1~365). All input variables are listed
 
 
 The output variable of the original dataset is Concrete compressive strength (MPa).
-However, for use with this project, the output has been changed:
+However, for use with this project, the output variable has been changed from continuous
+to binary such that:
 
-	1 - compressive strength > 40 MPa
-	0 - compressive strength <= 40 MPa
+	1 -> compressive strength > 40 MPa
+	0 -> compressive strength <= 40 MPa
 
 --------------------------------------------------------------------------------
 
