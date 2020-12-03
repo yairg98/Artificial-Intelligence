@@ -15,8 +15,9 @@ class BPNN:
     # Constructor accepting network dimensions and optional pre-loaded weights
     # Assumes legal initialization parameters
     # Initial weights must be specified in the file
-    def __init__(self, filename):
-        self.setParams(filename)
+    def __init__(self, filename=""):
+        if filename:
+            self.setParams(filename)
         
         
     # Get neural network parameters from text file
@@ -287,10 +288,8 @@ class BPNN:
 
 #%% Driver code for testing BPNN functionality
 
-# Assumes legal inputs for all prompts
 
-filename = input("Name of file containing initial network parameters: ")
-nn = BPNN(filename)
+nn = BPNN()
 
 choice = ""
 while(1):
