@@ -61,8 +61,8 @@ results.5.100.txt:
 	
 Model and Training Parameters:
 
-Hidden layers (5):
-	I chose to use 5 hidden layers, in line with the general guideline of setting the number of nodes in
+Hidden layer nodes (5):
+	I chose to use 5 nodes in the hidden layer, in line with the general guideline of setting the number of nodes in
 	the hidden layer in between the number of nodes in the input and output layers. This seemed to provide 
 	relatively good performance, so I did not feel the need to change it.
 	
