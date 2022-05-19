@@ -85,19 +85,18 @@ int getPlayer(int p) {
 }
 
 
-
 // Runs the game
 int main() {
 	
 	// Select players (human, AI, random, etc.)
 	// players[0] is left empty to keep the index consistent with the player id
-	vector<unique_ptr<Player>> players;
+    vector<unique_ptr<Player>> players;
     int type;
 	for ( int i : {1, 2} ) {
         type = getPlayer(i);
         if (type == 1) { players.emplace_back( new Human(i) ); }
         else if (type == 2) { players.emplace_back( new Bot(i) ); }
-		else if (type == 3) { players.emplace_back( new Bot2(i) ); }
+		// else if (type == 3) { players.emplace_back( new Bot2(i) ); }
 	}
     
 	// Load and start the game
