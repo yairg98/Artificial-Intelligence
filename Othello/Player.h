@@ -6,6 +6,7 @@
 #include <chrono>
 #include <thread>
 #include <utility>
+#include <cmath>
 
 using namespace std;
 
@@ -85,7 +86,7 @@ class Bot: public Player {
 private:
 	
 	// Set the player time limit
-	chrono::seconds limit; // = chrono::seconds(2);
+	chrono::milliseconds limit; // = chrono::seconds(2);
 
 public:
 
@@ -96,11 +97,11 @@ public:
 		srand(time(NULL));
 		
 		// Prompt user for the time limit in seconds
-		int lim = 0;
+		float lim = 0;
 		bool valid= false;
 		
 		while (!valid) {
-			cout << "Choose an time limit (in seconds) for PLAYER " << id << ": ";
+			cout << "Choose a time limit (in seconds) for PLAYER " << id << ": ";
 			cin >> lim;
 			
 			if (cin.good()) { valid = true; }
@@ -112,7 +113,8 @@ public:
 			}
 		}
 		// Set the time limit
-		limit = chrono::seconds(lim);
+		int lim_ms = floor(lim*1000);
+		limit = chrono::milliseconds(lim_ms);
 	}
 
 	// Prompt the player to make a move
@@ -151,7 +153,7 @@ class Bot2: public Player {
 private:
 	
 	// Set the player time limit
-	chrono::seconds limit; // = chrono::seconds(2);
+	chrono::milliseconds limit; // = chrono::seconds(2);
 
 public:
 
@@ -162,11 +164,11 @@ public:
 		srand(time(NULL));
 		
 		// Prompt user for the time limit in seconds
-		int lim = 0;
+		float lim = 0;
 		bool valid= false;
 		
 		while (!valid) {
-			cout << "Choose an time limit (in seconds) for PLAYER " << id << ": ";
+			cout << "Choose a time limit (in seconds) for PLAYER " << id << ": ";
 			cin >> lim;
 			
 			if (cin.good()) { valid = true; }
@@ -178,7 +180,8 @@ public:
 			}
 		}
 		// Set the time limit
-		limit = chrono::seconds(lim);
+		int lim_ms = floor(lim*1000);
+		limit = chrono::milliseconds(lim_ms);
 	}
 
 	// Prompt the player to make a move
